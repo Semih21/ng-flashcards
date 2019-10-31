@@ -1,49 +1,48 @@
-import { Component, OnInit,Input,Output,EventEmitter} from '@angular/core';
-import {IFlash} from './../flash.model';
-
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { IFlash } from './../flash.model';
 
 @Component({
   selector: 'app-flash',
   templateUrl: './flash.component.html',
-  styleUrls: ['./flash.component.css']
+  styleUrls: ['./flash.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FlashComponent implements OnInit {
+export class FlashComponent {
+  @Input() flash: IFlash = {
+    question: '',
+    answer: '',
+    id: 0,
+    show: false,
+  };
+  @Output() toggleCard = new EventEmitter();
+  @Output() delete = new EventEmitter();
+  @Output() edit = new EventEmitter();
+  @Output() rememberedChange = new EventEmitter();
 
-  @Output() onDelete=new EventEmitter()
-  @Output() onEdit=new EventEmitter()
-  @Output() onRememberedChange=new EventEmitter()
-  @Input() flash: IFlash = {id: 1,
-    question: 'React to Angular',
-    answer: 'No Reaction :)',
-    show: false};
-
-    @Output() onToggleCard=new EventEmitter()
-  constructor() { }
-
-  ngOnInit() {
+  onToggleCard() {
+    this.toggleCard.emit(this.flash.id);
   }
 
-  toggleCard(){
-    this.onToggleCard.emit(this.flash.id)
+  deleteFlash() {
+    this.delete.emit(this.flash.id);
   }
 
-  deleteFlash(){
-    this.onDelete.emit(this.flash.id)
-  }
-  editFlash(){
-    this.onEdit.emit(this.flash.id)
+  editFlash() {
+    this.edit.emit(this.flash.id);
   }
 
-  markCorrect(){
-    this.onRememberedChange.emit({
-      id:this.flash.id,
-      flag:'correct'
-    })
+  markCorrect() {
+    this.rememberedChange.emit({
+      id: this.flash.id,
+      flag: 'correct'
+    });
   }
-  markIncorrect(){
-    this.onRememberedChange.emit({
-      id:this.flash.id,
-      flag:'incorrect'
-    })
+
+  markIncorrect() {
+    this.rememberedChange.emit({
+      id: this.flash.id,
+      flag: 'incorrect'
+    });
   }
+
 }
